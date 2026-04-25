@@ -18,3 +18,8 @@ def add_unique_student_id(df, col_name, prefix):
     df[col_name] = unique_id
     return df
 
+def move_std_id(df, col_name):
+    move_column = df.pop(col_name)
+    df.insert(0, col_name, move_column)
+    return df
+
