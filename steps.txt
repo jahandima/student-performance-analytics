@@ -1,0 +1,93 @@
+**Step 1 — Histograms of G1, G2, G3 (Full Dataset)**
+
+Plot three separate histograms — one for each grade period. You want to see the shape of each distribution and whether it changes across periods.
+
+Hints:
+- Use `matplotlib.pyplot` — you already have it
+- Plot all three in a single figure side by side using `plt.subplot(1, 3, n)`
+- Set `bins=20` to match the 0–20 grading scale
+- Add a vertical line at x=10 (the passing threshold) using `plt.axvline()` — this makes the cliff visually obvious
+- Label your axes and give each subplot a title
+
+
+**Step 2 — Histograms of G3 Per Progression Label**
+
+Plot three histograms of G3 — one for Underachievers, one for On Track, one for Overachievers. You want to see whether each label has a distinct score distribution.
+
+Hints:
+- Filter `all_G_df` by `progression_label` to get three separate dataframes
+- Plot them on the same figure using `plt.subplot(1, 3, n)` again
+- Use the same x-axis range (0–20) for all three so they are directly comparable — set this using `plt.xlim(0, 20)`
+- What shape do you expect Underachievers to have compared to Overachievers?
+
+
+**Step 3 — Outlier Detection on Absences**
+
+Formally identify which students have statistically abnormal absence counts using the IQR method.
+
+Hints:
+- IQR = Q3 - Q1 — use `.quantile(0.75)` and `.quantile(0.25)`
+- Lower bound = Q1 - 1.5 × IQR
+- Upper bound = Q3 + 1.5 × IQR
+- Any student outside these bounds is a formal outlier
+- How many outliers are there? Are they mostly in one performance group?
+
+
+**Step 4 — Outlier Detection on Deviation**
+
+Apply the exact same IQR method to the `deviation` column in `all_G_df`.
+
+Hints:
+- Reuse the same logic from Step 3 — consider writing a **reusable function** that takes any column and returns its outliers
+- Does the function formally capture the -11 crash and +12 recovery you identified earlier?
+- Which progression label do most deviation outliers belong to?
+
+
+**Step 5 — Compare G3 Distributions Above vs Below Cliff**
+
+Go beyond median — look at the full spread of G3 scores for Above and Below cliff groups side by side.
+
+Hints:
+- Plot two histograms overlaid on the **same axes** using `alpha=0.5` for transparency so both are visible
+- Use `label=` parameter and `plt.legend()` to distinguish the two groups
+- Also print the full descriptive statistics for both groups using `.describe()`
+- What does the shape difference tell you that the median alone could not?
+
+**Step 6 — Variance and Standard Deviation Per Performance Group**
+
+Which performance group is the most unpredictable? High variance means scores are all over the place within that group.
+
+Hints:
+- Use `.groupby('performance_group')['G3'].agg(['var', 'std', 'mean'])`
+- Round to 2 decimal places
+- A group with high variance but moderate mean is your most unpredictable group
+- Does this match what you expected from the progression analysis?
+
+
+**Step 7 — Effect Size Using Cohen's d**
+
+Your Step 7 finding was unexpected — Overachievers had MORE absences than Underachievers. Cohen's d will tell you if that difference is meaningful or just noise.
+
+Hints:
+- Cohen's d formula: `d = (mean1 - mean2) / pooled_std`
+- Pooled std = `sqrt((std1² + std2²) / 2)`
+- Calculate d for `absences` between Underachievers and Overachievers
+- Calculate d for `failures` between the same two groups
+- Interpret your result:
+
+| Cohen's d | Meaning |
+|---|---|
+| 0.0 – 0.2 | Negligible |
+| 0.2 – 0.5 | Small |
+| 0.5 – 0.8 | Medium |
+| 0.8+ | Large |
+
+
+**Step 8 — Report Results**
+
+Write your findings in plain English inside your notebook as markdown cells. Separate every finding into one of two categories:
+
+```
+Strong Evidence — supported by effect size and distribution shape
+Weak Signal — visible in counts but not confirmed by effect size
+```
