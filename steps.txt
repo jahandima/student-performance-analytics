@@ -1,0 +1,44 @@
+### Steps and Hints
+
+Step 1 — Calculate the common difference d per student
+For each student, d is simply the difference between G2 and G1. This is the rate of change per period.
+
+Hint: This is a single pandas column operation. No loop needed.
+
+Step 2 — Calculate expected G3 per student
+If scores follow an arithmetic sequence, expected G3 = G2 + d.
+
+Hint: This is also a single column operation using the d column you just created.
+
+Step 3 — Calculate deviation per student
+Deviation = actual G3 minus expected G3.
+
+* Negative deviation → student did worse than expected
+* Zero deviation → student performed exactly as expected
+* Positive deviation → student did better than expected
+
+Hint: Another single column operation.
+
+Step 4 — Classify each student
+Create a new column progression_label with three categories:
+
+* Underachiever → deviation is negative
+* On Track → deviation is zero
+* Overachiever → deviation is positive
+
+Hint: Use np.select() or pd.cut() — think about which fits better here and why.
+
+Step 5 — Count and percentage per label
+How many students fall into each category? What percentage?
+
+Hint: You already did this exact operation yesterday with performance groups.
+
+Step 6 — Cross-check with performance groups
+Which performance group has the highest proportion of underachievers?
+
+Hint: Use groupby on both performance_group and progression_label together.
+
+Step 7 — Compare underachievers vs on track students
+Do underachievers have more absences or failures than On Track students?
+
+Hint: Use groupby on progression_label with the same approach as yesterday's cliff group comparison.
